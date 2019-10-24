@@ -84,4 +84,4 @@ if __name__ == "__main__":
     # removed before deploying a production app.
     application.debug = True
     CORS(application)
-    application.run(threaded=True)
+    application.run()
