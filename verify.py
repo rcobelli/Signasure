@@ -22,7 +22,7 @@ def verify(uuid, img_uri):
 
     return {
         "statusCode": 200,
-        "body": "{}".format(predictions)
+        "body": "{}".format(predictions[0])
     }
 
 
