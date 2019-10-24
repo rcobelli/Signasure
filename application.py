@@ -39,26 +39,44 @@ def data_not_found(e):
 @cross_origin(origin='localhost', headers=['Content- Type', 'Authorization'])
 def split_signatures():
     # return request.get_json()["image"]
-    raw_sheet_img = request.get_json()["image"]
-    sheet_img_obj = flatten.create_image(raw_sheet_img)
-    return flatten.api_handler(sheet_img_obj)
+    try:
+        raw_sheet_img = request.get_json()["image"]
+        sheet_img_obj = flatten.create_image(raw_sheet_img)
+        return flatten.api_handler(sheet_img_obj)
+    except Exception as e:
+        return {
+            "status": 500,
+            "body": {"error": e}
+        }
 
 
 @application.route('/api/v1/train', methods=['POST'])
 @cross_origin(origin='localhost', headers=['Content- Type', 'Authorization'])
 def train_model():
-    authentic_uris = request.get_json()["signatures"]
-    name = request.get_json()["name"]
-    forged_uris = forger.forge_name(name)
-    return train.train(authentic_uris, forged_uris)
+    try:
+        authentic_uris = request.get_json()["signatures"]
+        name = request.get_json()["name"]
+        forged_uris = forger.forge_name(name)
+        return train.train(authentic_uris, forged_uris)
+    except Exception as e:
+        return {
+            "status": 500,
+            "body": {"error": e}
+        }
 
 
 @application.route('/api/v1/verify', methods=['POST'])
 @cross_origin(origin='localhost', headers=['Content- Type', 'Authorization'])
 def verify_sig():
-    signature = request.get_json()["signature"]
-    uuid = request.get_json()["uuid"]
-    return verify.verify(uuid, signature)
+    try:
+        signature = request.get_json()["signature"]
+        uuid = request.get_json()["uuid"]
+        return verify.verify(uuid, signature)
+    except Exception as e:
+        return {
+            "status": 500,
+            "body": {"error": e}
+        }
 
 
 if __name__ == "__main__":
@@ -66,4 +84,4 @@ if __name__ == "__main__":
     # removed before deploying a production app.
     application.debug = True
     CORS(application)
-    application.run()
+    application.run(threaded=True)
