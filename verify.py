@@ -7,7 +7,7 @@ import sys
 
 
 def verify(uuid, img_uri):
-    filename = "{}/tmp/verify/{}.jpeg".format(sys.path[0], uuid)
+    filename = "{}/verify/{}.jpeg".format(sys.path[0], uuid)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     uri = uri_str_to_bytes(img_uri)
     fh = open(filename, "wb")
