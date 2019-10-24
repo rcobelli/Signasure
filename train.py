@@ -4,7 +4,6 @@ import coremltools
 import os
 import sys
 import uuid
-import boto3
 
 
 def train(authentic, forged):
@@ -49,9 +48,7 @@ def train(authentic, forged):
 
     # 6. Save the model
     # SAVE MODEL TO S3
-    s3 = boto3.client('s3')
-    bucket_name = 'my-bucket'
-    model.save(str(model_uuid) + '.model')
+    model.save('{}/models/{}.model'.format(sys.path[0], str(model_uuid)))
 
     return {
         "statusCode": 200,

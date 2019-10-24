@@ -2,7 +2,6 @@ import turicreate as tc
 import base64
 import os
 import sys
-import boto3
 
 # USAGE: python eval.py __TEST_IMAGE__ __MODEL_UUID__
 
@@ -17,9 +16,7 @@ def verify(uuid, img_uri):
 
     data = tc.image_analysis.load_images(filename, with_path=True)
 
-    s3 = boto3.client('s3')
-    bucket_name = 'my-bucket'
-    model = tc.load_model(uuid + '.model')
+    model = tc.load_model('{}/models/{}.model'.format(sys.path[0], uuid))
 
     # 3. Generate prediction
     predictions = model.predict(dataset=data)
