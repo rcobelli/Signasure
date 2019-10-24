@@ -20,11 +20,9 @@ def verify(uuid, img_uri):
     # 3. Generate prediction
     predictions = model.predict(dataset=data)
 
-    print(predictions)
-
     return {
         "statusCode": 200,
-        "body": "done"
+        "body": "{}".format(predictions)
     }
 
 
