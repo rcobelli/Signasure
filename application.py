@@ -23,7 +23,7 @@ def home():
 def page_not_found(e):
     return {
         "statusCode": 400,
-        "body": {}
+        "body": {"error": e}
     }
 
 
@@ -31,7 +31,7 @@ def page_not_found(e):
 def data_not_found(e):
     return {
         "statusCode": 500,
-        "body": {}
+        "body": {"error": e}
     }
 
 
@@ -44,10 +44,7 @@ def split_signatures():
         sheet_img_obj = flatten.create_image(raw_sheet_img)
         return flatten.api_handler(sheet_img_obj)
     except Exception as e:
-        return {
-            "status": 500,
-            "body": {"error": e}
-        }
+        data_not_found(e)
 
 
 @application.route('/api/v1/train', methods=['POST'])
@@ -59,10 +56,7 @@ def train_model():
         forged_uris = forger.forge_name(name)
         return train.train(authentic_uris, forged_uris)
     except Exception as e:
-        return {
-            "status": 500,
-            "body": {"error": e}
-        }
+        data_not_found(e)
 
 
 @application.route('/api/v1/verify', methods=['POST'])
@@ -73,10 +67,7 @@ def verify_sig():
         uuid = request.get_json()["uuid"]
         return verify.verify(uuid, signature)
     except Exception as e:
-        return {
-            "status": 500,
-            "body": {"error": e}
-        }
+        data_not_found(e)
 
 
 if __name__ == "__main__":
