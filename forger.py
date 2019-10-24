@@ -1,12 +1,14 @@
 import base64
 from io import BytesIO
 from PIL import ImageFont, Image, ImageDraw
+import sys
 
 
 def forge_name(name):
     res = {}
     for i in range(1, 16+1):
-        font = ImageFont.truetype("sig-" + str(i) + ".ttf", 80)
+        font = ImageFont.truetype(
+            "{}/sig-{}.ttf".format(sys.path[0], str(i)), 80)
         img = Image.new("RGB", (font.getsize(
             name)[0] + 80, 175), color=(255, 255, 255))
         draw = ImageDraw.Draw(img)
