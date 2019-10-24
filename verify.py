@@ -17,7 +17,7 @@ def verify(uuid, img_uri):
     data = tc.image_analysis.load_images(filename, with_path=True)
 
     model = tc.load_model('{}/models/{}.model'.format(sys.path[0], uuid))
-
+    return data
     # 3. Generate prediction
     predictions = model.predict(dataset=data)
 
