@@ -8,10 +8,11 @@ import sys
 
 
 def verify(uuid, img_uri):
-    filename = "{}/verify/{}.jpeg".format(sys.path[0], uuid)
+    filename = "{}/verify/{}.png".format(sys.path[0], uuid)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    mono_uri = flatten.monochrome_img(img_uri)
-    uri = uri_str_to_bytes(mono_uri)
+    #mono_uri = flatten.monochrome_img(img_uri)
+    #uri = uri_str_to_bytes(mono_uri)
+    uri = uri_str_to_bytes(img_uri)
     fh = open(filename, "wb")
     fh.write(base64.decodebytes(uri))
     fh.close()
