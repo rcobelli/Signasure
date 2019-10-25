@@ -1,5 +1,6 @@
 import turicreate as tc
 import flatten
+import pandas as pd
 import base64
 import os
 import sys
@@ -22,6 +23,10 @@ def verify(uuid, img_uri):
     model = tc.load_model('{}/models/{}.model'.format(sys.path[0], uuid))
     # 3. Generate prediction
     predictions = model.predict(dataset=data)
+
+    df = pd.DataFrame(predictions, columns=['ouput'])
+
+    print(df)
 
     os.remove(filename)
 
