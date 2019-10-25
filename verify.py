@@ -25,13 +25,12 @@ def verify(uuid, img_uri):
     # 3. Generate prediction
     #predictions = model.predict(dataset=data)
     test['predictions'] = model.predict(test)
-    print(test["predictions"])
 
     os.remove(filename)
 
     return {
         "statusCode": 200,
-        "body": "{}".format(test['predictions'])
+        "body": "{}".format(test['predictions'][0])
     }
 
 
