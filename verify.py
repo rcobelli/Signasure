@@ -1,4 +1,5 @@
 import turicreate as tc
+import flatten
 import base64
 import os
 import sys
@@ -7,9 +8,10 @@ import sys
 
 
 def verify(uuid, img_uri):
-    filename = "{}/verify/{}.png".format(sys.path[0], uuid)
+    filename = "{}/verify/{}.jpeg".format(sys.path[0], uuid)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    uri = uri_str_to_bytes(img_uri)
+    mono_uri = flatten.monochrome_img(img_uri)
+    uri = uri_str_to_bytes(mono_uri)
     fh = open(filename, "wb")
     fh.write(base64.decodebytes(uri))
     fh.close()

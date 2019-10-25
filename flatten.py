@@ -55,6 +55,24 @@ def flatten_image(image):
     return final_scan
 
 
+def monochrome_img(img_uri):
+    image = create_image(img_uri)
+    scale_percent = 0.95
+    width = int(image.shape[1])
+    height = int(image.shape[0])
+
+    while width >= 400:
+        width = int(width * scale_percent)
+        height = int(height * scale_percent)
+
+    dim = (width, height)
+
+    image = cv2.resize(image, dim)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    (thresh, final_scan) = cv2.threshold(image, 175, 255, cv2.THRESH_BINARY)
+    return encode_image(final_scan)
+
+
 def encode_image(image):
     retval, buffer = cv2.imencode('.jpeg', image)
     jpg_as_text = base64.b64encode(buffer)
@@ -65,49 +83,42 @@ def encode_image(image):
 
 # Takes in an opencv image object, and splits the image into an 8 by 2 grid. Each image is encoded to base 64 and added to a json body
 def split_image(image):
-    try:
-        grid_rows = 8
-        grid_cols = 2
+    grid_rows = 8
+    grid_cols = 2
 
-        crop_width = int(image.shape[1] / grid_cols)
-        crop_height = int(image.shape[0] / grid_rows)
+    crop_width = int(image.shape[1] / grid_cols)
+    crop_height = int(image.shape[0] / grid_rows)
 
-        start_row = 0
-        end_row = crop_height
+    start_row = 0
+    end_row = crop_height
 
-        encoded_signatures = []
+    encoded_signatures = []
 
-        count = 0
-        for row_num in range(0, grid_rows):
-            start_col = 0
-            end_col = crop_width
-            for col_num in range(0, grid_cols):
-                cropped_image = image[start_row:end_row, start_col:end_col]
-                # cv2.imwrite('sig-' + str(row_num+1) + "-" +
-                #            str(col_num+1) + ".png", cropped_image)
-                temp = {
-                    "id": count,
-                    "uri": encode_image(cropped_image)
-                }
-                encoded_signatures.append(temp)
-                start_col += crop_width
-                end_col += crop_width
-                count += 1
-            start_row += crop_height
-            end_row += crop_height
+    count = 0
+    for row_num in range(0, grid_rows):
+        start_col = 0
+        end_col = crop_width
+        for col_num in range(0, grid_cols):
+            cropped_image = image[start_row:end_row, start_col:end_col]
+            # cv2.imwrite('sig-' + str(row_num+1) + "-" +
+            #            str(col_num+1) + ".png", cropped_image)
+            temp = {
+                "id": count,
+                "uri": encode_image(cropped_image)
+            }
+            encoded_signatures.append(temp)
+            start_col += crop_width
+            end_col += crop_width
+            count += 1
+        start_row += crop_height
+        end_row += crop_height
 
-        body = {
-            "statusCode": 200,
-            "body": encoded_signatures
-        }
+    body = {
+        "statusCode": 200,
+        "body": encoded_signatures
+    }
 
-        return body
-
-    except:
-        return {
-            'statusCode': 500,
-            'body': {}
-        }
+    return body
 
 
 def mapp(h):
