@@ -24,13 +24,16 @@ def verify(uuid, img_uri):
     model = tc.load_model('{}/models/{}.model'.format(sys.path[0], uuid))
     # 3. Generate prediction
     #predictions = model.predict(dataset=data)
-    test['predictions'] = model.predict(test)
+    test['predictions'] = model.predict(test, output_type="probability_vector")
 
     os.remove(filename)
 
     return {
         "statusCode": 200,
-        "body": "{}".format(test['predictions'][0])
+        "body": {
+            "authentic": float(test['predictions'][0][0]),
+            "forge": float(test['predictions'][0][1])
+        }
     }
 
 
