@@ -40,7 +40,8 @@ def train(authentic, forged):
         lambda path: os.path.basename(os.path.dirname(path)))
 
     # 3. Create model
-    model = tc.image_classifier.create(data, target='status')
+    model = tc.image_classifier.create(
+        data, target='status', model='squeezenet_v1.1')
 
     # 5. Evaluate the model and show metrics
     metrics = model.evaluate(data)
